@@ -1,183 +1,201 @@
-✨indonesia-formatter 🇮🇩 <br>
-A comprehensive TypeScript/JavaScript library for formatting Indonesian-specific data including phone numbers, NPWP, NIK, dates, and calendar conversions (Javanese & Hijri).
+# 🇮🇩 indonesia-formatter
 
-👀 Installation
+**TypeScript/JavaScript library untuk format data khas Indonesia**, seperti:
+- Nomor telepon
+- NPWP
+- NIK
+- Tanggal dalam Bahasa Indonesia
+- Konversi kalender Jawa dan Hijriah
+
+---
+
+## 👀 Instalasi
+
+```bash
 npm install indonesia-formatter
-# or
+# atau
 yarn add indonesia-formatter
-# or
+# atau
 pnpm add indonesia-formatter
+```
 
-🚀 Features
-📱 Phone Number Formatter - Format Indonesian phone numbers with various styles
-💳 NPWP Formatter - Format and validate tax identification numbers
-🆔 NIK Parser - Parse and validate Indonesian ID numbers with demographic info extraction
-📅 Date Formatter - Format dates in Indonesian with relative time support
-🌙 Calendar Converter - Convert dates to Javanese (with Pasaran) and Hijri calendars
+---
 
+## 🚀 Fitur
 
-🎉 Usage
-1. Phone Number Formatting
+- 📱 **Phone Number Formatter** — Format nomor HP Indonesia dalam berbagai gaya
+- 💳 **NPWP Formatter** — Format dan validasi NPWP
+- 🆔 **NIK Parser** — Parsing NIK dengan ekstraksi info demografi
+- 📅 **Date Formatter** — Format tanggal Bahasa Indonesia + relative time
+- 🌙 **Calendar Converter** — Konversi ke kalender Jawa dan Hijriah
+
+---
+
+## 🎉 Penggunaan
+
+### 1. 📱 Phone Number
+
+```ts
 import { PhoneFormatter } from 'indonesia-formatter';
 
-// Format phone numbers
-PhoneFormatter.format('081234567890');  
-// Output: "0812-3456-7890"
+PhoneFormatter.format('081234567890');
+// => "0812-3456-7890"
 
-PhoneFormatter.format('6281234567890', { format: 'spaces' });  
-// Output: "+62 812 3456 7890"
+PhoneFormatter.format('6281234567890', { format: 'spaces' });
+// => "+62 812 3456 7890"
 
-PhoneFormatter.format('081234567890', { format: 'dots' });  
-// Output: "0812.3456.7890"
+PhoneFormatter.format('081234567890', { format: 'dots' });
+// => "0812.3456.7890"
 
-// Validate phone numbers
-PhoneFormatter.validate('081234567890');  // true
-PhoneFormatter.validate('1234');           // false
+PhoneFormatter.validate('081234567890'); // true
+PhoneFormatter.validate('1234'); // false
+```
 
-2. NPWP Formatting
+---
+
+### 2. 💳 NPWP
+
+```ts
 import { NPWPFormatter } from 'indonesia-formatter';
 
-// Format NPWP
-NPWPFormatter.format('123456789012345');  
-// Output: "12.345.678.9-012.345"
+NPWPFormatter.format('123456789012345');
+// => "12.345.678.9-012.345"
 
-// Validate NPWP
-NPWPFormatter.validate('123456789012345');  // true
-NPWPFormatter.validate('12345');            // false
+NPWPFormatter.validate('123456789012345'); // true
+NPWPFormatter.validate('12345'); // false
+```
 
-3. NIK (KTP) Parsing
+---
+
+### 3. 🆔 NIK (KTP)
+
+```ts
 import { NIKFormatter } from 'indonesia-formatter';
 
-// Parse NIK to extract information
 const nikInfo = NIKFormatter.parse('3201231507900001');
 console.log(nikInfo);
-// Output: {
+// {
 //   nik: '3201231507900001',
 //   provinceCode: '32',
 //   cityCode: '01',
 //   districtCode: '23',
-//   birthDate: Date(1990-07-15),
+//   birthDate: new Date(1990, 6, 15),
 //   gender: 'male',
 //   uniqueCode: '0001'
 // }
 
-// Format NIK for display
-NIKFormatter.format('3201231507900001');  
-// Output: "3201 2315 0790 0001"
+NIKFormatter.format('3201231507900001');
+// => "3201 2315 0790 0001"
 
-// Validate NIK
-NIKFormatter.validate('3201231507900001');  // true
+NIKFormatter.validate('3201231507900001'); // true
+```
 
-4. Date Formatting
+---
+
+### 4. 📅 Tanggal
+
+```ts
 import { DateFormatter } from 'indonesia-formatter';
 
 const date = new Date('2024-12-31');
 
-// Various date formats
-DateFormatter.format(date, 'long');     
-// Output: "Selasa, 31 Desember 2024"
+DateFormatter.format(date, 'long');      // "Selasa, 31 Desember 2024"
+DateFormatter.format(date, 'medium');    // "31 Desember 2024"
+DateFormatter.format(date, 'short');     // "31/12/2024"
+DateFormatter.format(date, 'monthYear'); // "Desember 2024"
 
-DateFormatter.format(date, 'medium');   
-// Output: "31 Desember 2024"
+DateFormatter.relative(new Date('2024-12-30')); // "kemarin"
+DateFormatter.relative(new Date('2024-12-25')); // "6 hari yang lalu"
+DateFormatter.relative(new Date('2025-01-05')); // "dalam 5 hari"
+```
 
-DateFormatter.format(date, 'short');    
-// Output: "31/12/2024"
+---
 
-DateFormatter.format(date, 'monthYear'); 
-// Output: "Desember 2024"
+### 5. 🌙 Kalender Jawa & Hijriah
 
-// Relative time
-DateFormatter.relative(new Date('2024-12-30'));  
-// Output: "kemarin"
-
-DateFormatter.relative(new Date('2024-12-25'));  
-// Output: "6 hari yang lalu"
-
-DateFormatter.relative(new Date('2025-01-05'));  
-// Output: "dalam 5 hari"
-
-5. Calendar Conversion
+```ts
 import { CalendarFormatter } from 'indonesia-formatter';
 
 const date = new Date('2024-12-31');
 
-// Convert to Javanese calendar
 const javanese = CalendarFormatter.toJavanese(date);
 console.log(javanese);
-// Output: {
-//   year: 1957,
-//   month: 'Besar',
-//   day: 29,
-//   pasaran: 'Wage'
-// }
+// { year: 1957, month: 'Besar', day: 29, pasaran: 'Wage' }
 
-// Format Javanese date
 CalendarFormatter.formatJavanese(date);
-// Output: "Wage, 29 Besar 1957 (31 Desember 2024)"
+// => "Wage, 29 Besar 1957 (31 Desember 2024)"
 
-// Convert to Hijri calendar
 const hijri = CalendarFormatter.toHijri(date);
 console.log(hijri);
-// Output: {
-//   year: 1446,
-//   month: 'Jumadil Akhir',
-//   monthNumber: 6,
-//   day: 29
-// }
+// { year: 1446, month: 'Jumadil Akhir', monthNumber: 6, day: 29 }
 
-// Format Hijri date
 CalendarFormatter.formatHijri(date);
-// Output: "29 Jumadil Akhir 1446 H (31 Desember 2024)"
+// => "29 Jumadil Akhir 1446 H (31 Desember 2024)"
+```
 
-⚓ API reference
-1. Phone Formatter
+---
 
-| Method                         | Description                     | Parameters                                                                 | Returns  |
-|-------------------------------|---------------------------------|----------------------------------------------------------------------------|----------|
-| `format(phone, options?)`     | Format phone number             | `phone: string`,<br>`options?: { format: 'standard' \| 'dots' \| 'spaces' }` | `string` |
-| `validate(phone)`             | Validate Indonesian phone number| `phone: string`                                                            | `boolean`|
+## ⚓ API Reference
 
-2. NPWP Formatter
+### 📱 PhoneFormatter
 
-| Method              | Description                         | Parameters         | Returns  |
-|---------------------|-------------------------------------|---------------------|----------|
-| `format(npwp)`      | Format NPWP to `XX.XXX.XXX.X-XXX.XXX` | `npwp: string`      | `string` |
-| `validate(npwp)`    | Validate NPWP (15 digits)            | `npwp: string`      | `boolean`|
+| Method                     | Deskripsi                    | Parameter                                                                 | Return    |
+|---------------------------|------------------------------|---------------------------------------------------------------------------|-----------|
+| `format(phone, options?)` | Format nomor HP              | `phone: string`, `options?: { format: 'standard' | 'dots' | 'spaces' }` | `string`  |
+| `validate(phone)`         | Validasi nomor HP            | `phone: string`                                                           | `boolean` |
 
-3. NIK (KTP) Formatter
+### 💳 NPWPFormatter
 
-| Method            | Description                          | Parameters     | Returns   |
-|-------------------|--------------------------------------|----------------|-----------|
-| `parse(nik)`      | Parse NIK and extract information     | `nik: string`  | `NIKInfo` |
-| `format(nik)`     | Format NIK with spaces                | `nik: string`  | `string`  |
-| `validate(nik)`   | Validate NIK format and date          | `nik: string`  | `boolean` |
+| Method            | Deskripsi                         | Parameter      | Return    |
+|------------------|-----------------------------------|----------------|-----------|
+| `format(npwp)`   | Format ke `XX.XXX.XXX.X-XXX.XXX`  | `npwp: string` | `string`  |
+| `validate(npwp)` | Validasi panjang dan digit NPWP   | `npwp: string` | `boolean` |
 
+### 🆔 NIKFormatter
 
-4. Date Formatter
+| Method          | Deskripsi                         | Parameter     | Return    |
+|----------------|-----------------------------------|---------------|-----------|
+| `parse(nik)`   | Parsing dan ekstraksi info NIK    | `nik: string` | `object`  |
+| `format(nik)`  | Format NIK agar terbaca rapi      | `nik: string` | `string`  |
+| `validate(nik)`| Validasi panjang dan tanggal NIK  | `nik: string` | `boolean` |
 
-| Method                        | Description                    | Parameters                                                                                     | Returns  |
-|-------------------------------|--------------------------------|------------------------------------------------------------------------------------------------|----------|
-| `format(date, format?)`       | Format date to Indonesian      | `date: Date`,<br>`format?: 'long' \| 'medium' \| 'short' \| 'monthYear'`                        | `string` |
-| `relative(date, baseDate?)`   | Get relative time in Indonesian| `date: Date`,<br>`baseDate?: Date`                                                              | `string` |
+### 📅 DateFormatter
 
+| Method                    | Deskripsi                           | Parameter                                                         | Return    |
+|---------------------------|-------------------------------------|-------------------------------------------------------------------|-----------|
+| `format(date, format?)`   | Format tanggal Indonesia            | `date: Date`, `format?: 'long' | 'medium' | 'short' | 'monthYear'` | `string`  |
+| `relative(date, base?)`   | Relative time dalam Bahasa Indonesia| `date: Date`, `baseDate?: Date`                                  | `string`  |
 
-5. Calendar Formatter
-| Method                                 | Description                   | Parameters                                                                 | Returns        |
-|----------------------------------------|-------------------------------|----------------------------------------------------------------------------|----------------|
-| `toJavanese(date)`                     | Convert to Javanese calendar | `date: Date`                                                               | `JavaneseDate` |
-| `toHijri(date)`                        | Convert to Hijri calendar    | `date: Date`                                                               | `HijriDate`    |
-| `formatJavanese(date, includeGregorian?)` | Format Javanese date          | `date: Date`,<br>`includeGregorian?: boolean`                             | `string`       |
-| `formatHijri(date, includeGregorian?)`    | Format Hijri date             | `date: Date`,<br>`includeGregorian?: boolean`                             | `string`       |
+### 🌙 CalendarFormatter
 
+| Method                            | Deskripsi                      | Parameter                 | Return        |
+|----------------------------------|--------------------------------|---------------------------|----------------|
+| `toJavanese(date)`               | Konversi ke kalender Jawa      | `date: Date`              | `JavaneseDate` |
+| `formatJavanese(date, withDate)`| Format kalender Jawa           | `date: Date`, `includeGregorian?: boolean` | `string` |
+| `toHijri(date)`                  | Konversi ke kalender Hijriah   | `date: Date`              | `HijriDate`    |
+| `formatHijri(date, withDate)`   | Format kalender Hijriah        | `date: Date`, `includeGregorian?: boolean` | `string` |
 
-🧠 Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
+---
 
-1. Fork the repository
-2. Create your feature branch (git checkout -b feature/amazing-feature)
-3. Commit your changes (git commit -m 'Add some amazing feature')
-4. Push to the branch (git push origin feature/amazing-feature)
-5. Open a Pull Request
+## 🧠 Kontribusi
 
-🦾 Testing
+1. Fork repo ini
+2. Buat branch fitur baru  
+   `git checkout -b feature/nama-fitur`
+3. Commit perubahan  
+   `git commit -m 'Tambah fitur xyz'`
+4. Push ke branch  
+   `git push origin feature/nama-fitur`
+5. Buka Pull Request ke branch `main`
+
+---
+
+## 🦾 Testing
+
+```bash
 npm test
+```
+
+---
+
+> Untuk request fitur tambahan, bug report, atau pull request, silakan buka issue.
