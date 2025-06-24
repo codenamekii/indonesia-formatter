@@ -1,5 +1,5 @@
 {
-  "name": "indonesia-formatter-dev",
+  "name": "@codenamekii/indonesia-formatter-dev",
   "version": "1.0.4",
   "description": "A comprehensive TypeScript library for formatting Indonesian-specific data",
   "main": "dist/index.js",
