@@ -1,4 +1,4 @@
-✨indonesia-formatter 🇮🇩
+✨indonesia-formatter 🇮🇩 <br>
 A comprehensive TypeScript/JavaScript library for formatting Indonesian-specific data including phone numbers, NPWP, NIK, dates, and calendar conversions (Javanese & Hijri).
 
 👀 Installation
