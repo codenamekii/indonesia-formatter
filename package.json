@@ -1,6 +1,6 @@
 {
   "name": "indonesia-formatter-dev",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A comprehensive TypeScript library for formatting Indonesian-specific data",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
