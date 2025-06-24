@@ -1,0 +1,54 @@
+{
+  "name": "indonesia-formatter",
+  "version": "1.0.0",
+  "description": "A comprehensive TypeScript library for formatting Indonesian-specific data",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "indonesia",
+    "formatter",
+    "phone",
+    "npwp",
+    "nik",
+    "ktp",
+    "date",
+    "calendar",
+    "javanese",
+    "hijri",
+    "typescript"
+  ],
+  "author": "Taufiqurrahman Kii",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codenamekii/indonesia-formatter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codenamekii/indonesia-formatter/issues"
+  },
+  "homepage": "https://github.com/codenamekii/indonesia-formatter#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.37.0",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.1.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.2"
+  }
+}

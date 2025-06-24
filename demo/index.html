@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indonesia Formatter - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .demo-card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e4e8;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        .error {
+            color: #e53e3e;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .success {
+            color: #38a169;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🇮🇩 Indonesia Formatter</h1>
+            <p class="tagline">Format data Indonesia dengan mudah dan akurat</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="demo-grid">
+            <!-- Phone Formatter -->
+            <div class="demo-card">
+                <h3>
+                    <span class="icon">📱</span>
+                    Phone Number Formatter
+                </h3>
+                <div class="input-group">
+                    <label for="phone-input">Nomor Telepon:</label>
+                    <input type="text" id="phone-input" placeholder="081234567890 atau 6281234567890">
+                </div>
+                <div class="input-group">
+                    <label for="phone-format">Format:</label>
+                    <select id="phone-format">
+                        <option value="standard">Standard (0812-3456-7890)</option>
+                        <option value="dots">Dots (0812.3456.7890)</option>
+                        <option value="spaces">Spaces (0812 3456 7890)</option>
+                    </select>
+                </div>
+                <button onclick="formatPhone()">Format</button>
+                <div id="phone-result" class="result" style="display: none;">
+                    <div class="result-label">Hasil:</div>
+                    <div class="result-value" id="phone-output"></div>
+                </div>
+                <div id="phone-error" class="error"></div>
+            </div>
+
+            <!-- NPWP Formatter -->
+            <div class="demo-card">
+                <h3>
+                    <span class="icon">💳</span>
+                    NPWP Formatter
+                </h3>
+                <div class="input-group">
+                    <label for="npwp-input">NPWP:</label>
+                    <input type="text" id="npwp-input" placeholder="123456789012345">
+                </div>
+                <button onclick="formatNPWP()">Format</button>
+                <div id="npwp-result" class="result" style="display: none;">
+                    <div class="result-label">Hasil:</div>
+                    <div class="result-value" id="npwp-output"></div>
+                </div>
+                <div id="npwp-error" class="error"></div>
+            </div>
+
+            <!-- NIK Parser -->
+            <div class="demo-card">
+                <h3>
+                    <span class="icon">🆔</span>
+                    NIK Parser
+                </h3>
+                <div class="input-group">
+                    <label for="nik-input">NIK (KTP):</label>
+                    <input type="text" id="nik-input" placeholder="3201231507900001">
+                </div>
+                <button onclick="parseNIK()">Parse</button>
+                <div id="nik-result" class="result" style="display: none;">
+                    <div class="result-label">Informasi NIK:</div>
+                    <div class="result-value" id="nik-output"></div>
+                </div>
+                <div id="nik-error" class="error"></div>
+            </div>
+
+            <!-- Date Formatter -->
+            <div class="demo-card">
+                <h3>
+                    <span class="icon">📅</span>
+                    Date Formatter
+                </h3>
+                <div class="input-group">
+                    <label for="date-input">Tanggal:</label>
+                    <input type="date" id="date-input" value="2024-12-31">
+                </div>
+                <div class="input-group">
+                    <label for="date-format">Format:</label>
+                    <select id="date-format">
+                        <option value="long">Long (Senin, 31 Desember 2024)</option>
+                        <option value="medium">Medium (31 Desember 2024)</option>
+                        <option value="short">Short (31/12/2024)</option>
+                        <option value="monthYear">Month Year (Desember 2024)</option>
+                        <option value="relative">Relative Time</option>
+                    </select>
+                </div>
+                <button onclick="formatDate()">Format</button>
+                <div id="date-result" class="result" style="display: none;">
+                    <div class="result-label">Hasil:</div>
+                    <div class="result-value" id="date-output"></div>
+                </div>
+            </div>
+
+            <!-- Calendar Converter -->
+            <div class="demo-card">
+                <h3>
+                    <span class="icon">🌙</span>
+                    Calendar Converter
+                </h3>
+                <div class="input-group">
+                    <label for="calendar-input">Tanggal:</label>
+                    <input type="date" id="calendar-input" value="2024-12-31">
+                </div>
+                <div class="input-group">
+                    <label for="calendar-type">Konversi ke:</label>
+                    <select id="calendar-type">
+                        <option value="javanese">Kalender Jawa</option>
+                        <option value="hijri">Kalender Hijriah</option>
+                        <option value="both">Keduanya</option>
+                    </select>
+                </div>
+                <button onclick="convertCalendar()">Konversi</button>
+                <div id="calendar-result" class="result" style="display: none;">
+                    <div class="result-label">Hasil:</div>
+                    <div class="result-value" id="calendar-output"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated library functions (in real implementation, these would be imported)
+        
+        function formatPhone() {
+            const input = document.getElementById('phone-input').value;
+            const format = document.getElementById('phone-format').value;
+            const resultDiv = document.getElementById('phone-result');
+            const outputDiv = document.getElementById('phone-output');
+            const errorDiv = document.getElementById('phone-error');
+            
+            try {
+                // Simulate phone formatting
+                const cleaned = input.replace(/\D/g, '');
+                let formatted = '';
+                
+                if (cleaned.startsWith('62')) {
+                    const phone = cleaned;
+                    switch (format) {
+                        case 'standard':
+                            formatted = `+${phone.slice(0, 2)} ${phone.slice(2, 5)}-${phone.slice(5, 9)}-${phone.slice(9)}`;
+                            break;
+                        case 'dots':
+                            formatted = `+${phone.slice(0, 2)}.${phone.slice(2, 5)}.${phone.slice(5, 9)}.${phone.slice(9)}`;
+                            break;
+                        case 'spaces':
+                            formatted = `+${phone.slice(0, 2)} ${phone.slice(2, 5)} ${phone.slice(5, 9)} ${phone.slice(9)}`;
+                            break;
+                    }
+                } else if (cleaned.startsWith('0')) {
+                    const phone = cleaned;
+                    switch (format) {
+                        case 'standard':
+                            formatted = `${phone.slice(0, 4)}-${phone.slice(4, 8)}-${phone.slice(8)}`;
+                            break;
+                        case 'dots':
+                            formatted = `${phone.slice(0, 4)}.${phone.slice(4, 8)}.${phone.slice(8)}`;
+                            break;
+                        case 'spaces':
+                            formatted = `${phone.slice(0, 4)} ${phone.slice(4, 8)} ${phone.slice(8)}`;
+                            break;
+                    }
+                }
+                
+                outputDiv.textContent = formatted;
+                resultDiv.style.display = 'block';
+                errorDiv.textContent = '';
+            } catch (error) {
+                errorDiv.textContent = 'Format nomor telepon tidak valid';
+                resultDiv.style.display = 'none';
+            }
+        }
+        
+        function formatNPWP() {
+            const input = document.getElementById('npwp-input').value;
+            const resultDiv = document.getElementById('npwp-result');
+            const outputDiv = document.getElementById('npwp-output');
+            const errorDiv = document.getElementById('npwp-error');
+            
+            try {
+                const cleaned = input.replace(/\D/g, '');
+                
+                if (cleaned.length !== 15) {
+                    throw new Error('NPWP harus 15 digit');
+                }
+                
+                const formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2, 5)}.${cleaned.slice(5, 8)}.${cleaned.slice(8, 9)}-${cleaned.slice(9, 12)}.${cleaned.slice(12, 15)}`;
+                
+                outputDiv.textContent = formatted;
+                resultDiv.style.display = 'block';
+                errorDiv.textContent = '';
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                resultDiv.style.display = 'none';
+            }
+        }
+        
+        function parseNIK() {
+            const input = document.getElementById('nik-input').value;
+            const resultDiv = document.getElementById('nik-result');
+            const outputDiv = document.getElementById('nik-output');
+            const errorDiv = document.getElementById('nik-error');
+            
+            try {
+                const cleaned = input.replace(/\D/g, '');
+                
+                if (cleaned.length !== 16) {
+                    throw new Error('NIK harus 16 digit');
+                }
+                
+                const provinceCode = cleaned.slice(0, 2);
+                const cityCode = cleaned.slice(2, 4);
+                const districtCode = cleaned.slice(4, 6);
+                const birthDate = cleaned.slice(6, 12);
+                
+                let day = parseInt(birthDate.slice(0, 2));
+                const month = parseInt(birthDate.slice(2, 4));
+                const year = parseInt(birthDate.slice(4, 6));
+                
+                const isFemale = day > 40;
+                if (isFemale) {
+                    day -= 40;
+                }
+                
+                const fullYear = year > 50 ? 1900 + year : 2000 + year;
+                
+                const info = `
+NIK: ${cleaned.slice(0, 4)} ${cleaned.slice(4, 8)} ${cleaned.slice(8, 12)} ${cleaned.slice(12, 16)}
+Provinsi: ${provinceCode}
+Kota/Kab: ${cityCode}
+Kecamatan: ${districtCode}
+Tgl Lahir: ${day}/${month}/${fullYear}
+Jenis Kelamin: ${isFemale ? 'Perempuan' : 'Laki-laki'}
+                `.trim();
+                
+                outputDiv.textContent = info;
+                resultDiv.style.display = 'block';
+                errorDiv.textContent = '';
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                resultDiv.style.display = 'none';
+            }
+        }
+        
+        function formatDate() {
+            const input = document.getElementById('date-input').value;
+            const format = document.getElementById('date-format').value;
+            const resultDiv = document.getElementById('date-result');
+            const outputDiv = document.getElementById('date-output');
+            
+            const date = new Date(input);
+            const months = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+            const days = [
+                'Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'
+            ];
+            
+            let formatted = '';
+            
+            switch (format) {
+                case 'long':
+                    formatted = `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    break;
+                case 'medium':
+                    formatted = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    break;
+                case 'short':
+                    formatted = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+                    break;
+                case 'monthYear':
+                    formatted = `${months[date.getMonth()]} ${date.getFullYear()}`;
+                    break;
+                case 'relative':
+                    const now = new Date();
+                    const diff = now - date;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    
+                    if (days === 0) formatted = 'Hari ini';
+                    else if (days === 1) formatted = 'Kemarin';
+                    else if (days === -1) formatted = 'Besok';
+                    else if (days > 0) formatted = `${days} hari yang lalu`;
+                    else formatted = `${Math.abs(days)} hari lagi`;
+                    break;
+            }
+            
+            outputDiv.textContent = formatted;
+            resultDiv.style.display = 'block';
+        }
+        
+        function convertCalendar() {
+            const input = document.getElementById('calendar-input').value;
+            const type = document.getElementById('calendar-type').value;
+            const resultDiv = document.getElementById('calendar-result');
+            const outputDiv = document.getElementById('calendar-output');
+            
+            const date = new Date(input);
+            let result = '';
+            
+            if (type === 'javanese' || type === 'both') {
+                // Simplified Javanese calendar calculation
+                const pasaran = ['Legi', 'Pahing', 'Pon', 'Wage', 'Kliwon'];
+                const baseDate = new Date(1633, 6, 8);
+                const diff = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
+                const pasaranIndex = diff % 5;
+                
+                result += `Kalender Jawa: ${pasaran[pasaranIndex]}, [perhitungan lengkap akan ditampilkan]\n`;
+            }
+            
+            if (type === 'hijri' || type === 'both') {
+                // Simplified Hijri display
+                result += `${type === 'both' ? '\n' : ''}Kalender Hijriah: [perhitungan Hijriah akan ditampilkan]`;
+            }
+            
+            outputDiv.textContent = result;
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
