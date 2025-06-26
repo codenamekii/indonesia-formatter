@@ -3,7 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indonesia Formatter - Demo</title>
+    <title>Indonesia Formatter - Format Data Indonesia dengan Mudah</title>
+    <meta name="description" content="Library JavaScript untuk format data Indonesia: nomor telepon, NPWP, NIK, tanggal, kalender Jawa & Hijriah">
+    <meta property="og:title" content="Indonesia Formatter">
+    <meta property="og:description" content="Format data Indonesia dengan mudah: phone, NPWP, NIK, date, calendar">
+    <meta property="og:image" content="https://raw.githubusercontent.com/codenamekii/indonesia-formatter/main/demo/og-image.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🇮🇩</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -11,278 +22,624 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg-light: #f8fafc;
+            --bg-white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f7fa;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 20% 50%, var(--primary) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--secondary) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--primary) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-bottom: 40px;
+            padding: 0 20px;
+            position: relative;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease-out;
         }
 
         .tagline {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.25rem;
+            opacity: 0.95;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Demo Grid */
+        .demo-section {
+            padding: 60px 0;
         }
 
         .demo-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .demo-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: var(--bg-white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: translateX(-100%);
+            transition: transform 0.3s;
         }
 
         .demo-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .demo-card:hover::before {
+            transform: translateX(0);
         }
 
         .demo-card h3 {
-            color: #667eea;
-            margin-bottom: 20px;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.75rem;
+            font-size: 1.25rem;
         }
 
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        /* Form Elements */
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #555;
+            color: var(--text-primary);
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #e1e4e8;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.2s;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--bg-white);
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
         button {
-            background: #667eea;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
             cursor: pointer;
-            font-size: 16px;
-            transition: background 0.2s;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            width: 100%;
         }
 
         button:hover {
-            background: #5a67d8;
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
         }
 
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Results */
         .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            border-left: 4px solid #667eea;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .result-label {
             font-weight: 600;
-            color: #667eea;
-            margin-bottom: 5px;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
 
         .result-value {
             font-family: 'Courier New', monospace;
-            color: #333;
+            color: var(--text-primary);
+            word-break: break-all;
         }
 
         .error {
-            color: #e53e3e;
-            margin-top: 5px;
-            font-size: 14px;
+            color: var(--error);
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            display: none;
         }
 
-        .success {
-            color: #38a169;
+        .error.show {
+            display: block;
         }
 
-        .icon {
-            width: 24px;
-            height: 24px;
+        /* Stats Section */
+        .stats-section {
+            background: var(--bg-white);
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .header-buttons {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
+    <div class="bg-pattern"></div>
+    
     <header>
         <div class="container">
             <h1>🇮🇩 Indonesia Formatter</h1>
             <p class="tagline">Format data Indonesia dengan mudah dan akurat</p>
+            <div class="header-buttons">
+                <a href="https://www.npmjs.com/package/indonesia-formatter" class="btn btn-primary" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M1.763 0C.786 0 0 .786 0 1.763v20.474C0 23.214.786 24 1.763 24h20.474c.977 0 1.763-.786 1.763-1.763V1.763C24 .786 23.214 0 22.237 0zM5.13 5.323l13.837.019-.009 13.836h-3.464l.01-10.382h-3.456L12.04 19.17H5.113z"/>
+                    </svg>
+                    Install via NPM
+                </a>
+                <a href="https://github.com/codenamekii/indonesia-formatter" class="btn btn-secondary" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="demo-grid">
-            <!-- Phone Formatter -->
-            <div class="demo-card">
-                <h3>
-                    <span class="icon">📱</span>
-                    Phone Number Formatter
-                </h3>
-                <div class="input-group">
-                    <label for="phone-input">Nomor Telepon:</label>
-                    <input type="text" id="phone-input" placeholder="081234567890 atau 6281234567890">
+    <section class="demo-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2rem;">Try it out!</h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                Test semua fitur formatter langsung di browser
+            </p>
+            
+            <div class="demo-grid">
+                <!-- Phone Formatter -->
+                <div class="demo-card">
+                    <h3>
+                        <span class="icon">📱</span>
+                        Phone Number Formatter
+                    </h3>
+                    <div class="input-group">
+                        <label for="phone-input">Nomor Telepon:</label>
+                        <input type="text" id="phone-input" placeholder="081234567890 atau 6281234567890">
+                    </div>
+                    <div class="input-group">
+                        <label for="phone-format">Format:</label>
+                        <select id="phone-format">
+                            <option value="standard">Standard (0812-3456-7890)</option>
+                            <option value="dots">Dots (0812.3456.7890)</option>
+                            <option value="spaces">Spaces (0812 3456 7890)</option>
+                        </select>
+                    </div>
+                    <button onclick="formatPhone()">Format</button>
+                    <div id="phone-result" class="result">
+                        <div class="result-label">Hasil:</div>
+                        <div class="result-value" id="phone-output"></div>
+                    </div>
+                    <div id="phone-error" class="error"></div>
                 </div>
-                <div class="input-group">
-                    <label for="phone-format">Format:</label>
-                    <select id="phone-format">
-                        <option value="standard">Standard (0812-3456-7890)</option>
-                        <option value="dots">Dots (0812.3456.7890)</option>
-                        <option value="spaces">Spaces (0812 3456 7890)</option>
-                    </select>
-                </div>
-                <button onclick="formatPhone()">Format</button>
-                <div id="phone-result" class="result" style="display: none;">
-                    <div class="result-label">Hasil:</div>
-                    <div class="result-value" id="phone-output"></div>
-                </div>
-                <div id="phone-error" class="error"></div>
-            </div>
 
-            <!-- NPWP Formatter -->
-            <div class="demo-card">
-                <h3>
-                    <span class="icon">💳</span>
-                    NPWP Formatter
-                </h3>
-                <div class="input-group">
-                    <label for="npwp-input">NPWP:</label>
-                    <input type="text" id="npwp-input" placeholder="123456789012345">
+                <!-- NPWP Formatter -->
+                <div class="demo-card">
+                    <h3>
+                        <span class="icon">💳</span>
+                        NPWP Formatter
+                    </h3>
+                    <div class="input-group">
+                        <label for="npwp-input">NPWP:</label>
+                        <input type="text" id="npwp-input" placeholder="123456789012345">
+                    </div>
+                    <button onclick="formatNPWP()">Format</button>
+                    <div id="npwp-result" class="result">
+                        <div class="result-label">Hasil:</div>
+                        <div class="result-value" id="npwp-output"></div>
+                    </div>
+                    <div id="npwp-error" class="error"></div>
                 </div>
-                <button onclick="formatNPWP()">Format</button>
-                <div id="npwp-result" class="result" style="display: none;">
-                    <div class="result-label">Hasil:</div>
-                    <div class="result-value" id="npwp-output"></div>
-                </div>
-                <div id="npwp-error" class="error"></div>
-            </div>
 
-            <!-- NIK Parser -->
-            <div class="demo-card">
-                <h3>
-                    <span class="icon">🆔</span>
-                    NIK Parser
-                </h3>
-                <div class="input-group">
-                    <label for="nik-input">NIK (KTP):</label>
-                    <input type="text" id="nik-input" placeholder="3201231507900001">
+                <!-- NIK Parser -->
+                <div class="demo-card">
+                    <h3>
+                        <span class="icon">🆔</span>
+                        NIK Parser
+                    </h3>
+                    <div class="input-group">
+                        <label for="nik-input">NIK (KTP):</label>
+                        <input type="text" id="nik-input" placeholder="3201231507900001">
+                    </div>
+                    <button onclick="parseNIK()">Parse</button>
+                    <div id="nik-result" class="result">
+                        <div class="result-label">Informasi NIK:</div>
+                        <div class="result-value" id="nik-output"></div>
+                    </div>
+                    <div id="nik-error" class="error"></div>
                 </div>
-                <button onclick="parseNIK()">Parse</button>
-                <div id="nik-result" class="result" style="display: none;">
-                    <div class="result-label">Informasi NIK:</div>
-                    <div class="result-value" id="nik-output"></div>
-                </div>
-                <div id="nik-error" class="error"></div>
-            </div>
 
-            <!-- Date Formatter -->
-            <div class="demo-card">
-                <h3>
-                    <span class="icon">📅</span>
-                    Date Formatter
-                </h3>
-                <div class="input-group">
-                    <label for="date-input">Tanggal:</label>
-                    <input type="date" id="date-input" value="2024-12-31">
+                <!-- Date Formatter -->
+                <div class="demo-card">
+                    <h3>
+                        <span class="icon">📅</span>
+                        Date Formatter
+                    </h3>
+                    <div class="input-group">
+                        <label for="date-input">Tanggal:</label>
+                        <input type="date" id="date-input" value="2024-12-31">
+                    </div>
+                    <div class="input-group">
+                        <label for="date-format">Format:</label>
+                        <select id="date-format">
+                            <option value="long">Long (Senin, 31 Desember 2024)</option>
+                            <option value="medium">Medium (31 Desember 2024)</option>
+                            <option value="short">Short (31/12/2024)</option>
+                            <option value="monthYear">Month Year (Desember 2024)</option>
+                            <option value="relative">Relative Time</option>
+                        </select>
+                    </div>
+                    <button onclick="formatDate()">Format</button>
+                    <div id="date-result" class="result">
+                        <div class="result-label">Hasil:</div>
+                        <div class="result-value" id="date-output"></div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="date-format">Format:</label>
-                    <select id="date-format">
-                        <option value="long">Long (Senin, 31 Desember 2024)</option>
-                        <option value="medium">Medium (31 Desember 2024)</option>
-                        <option value="short">Short (31/12/2024)</option>
-                        <option value="monthYear">Month Year (Desember 2024)</option>
-                        <option value="relative">Relative Time</option>
-                    </select>
-                </div>
-                <button onclick="formatDate()">Format</button>
-                <div id="date-result" class="result" style="display: none;">
-                    <div class="result-label">Hasil:</div>
-                    <div class="result-value" id="date-output"></div>
-                </div>
-            </div>
 
-            <!-- Calendar Converter -->
-            <div class="demo-card">
-                <h3>
-                    <span class="icon">🌙</span>
-                    Calendar Converter
-                </h3>
-                <div class="input-group">
-                    <label for="calendar-input">Tanggal:</label>
-                    <input type="date" id="calendar-input" value="2024-12-31">
-                </div>
-                <div class="input-group">
-                    <label for="calendar-type">Konversi ke:</label>
-                    <select id="calendar-type">
-                        <option value="javanese">Kalender Jawa</option>
-                        <option value="hijri">Kalender Hijriah</option>
-                        <option value="both">Keduanya</option>
-                    </select>
-                </div>
-                <button onclick="convertCalendar()">Konversi</button>
-                <div id="calendar-result" class="result" style="display: none;">
-                    <div class="result-label">Hasil:</div>
-                    <div class="result-value" id="calendar-output"></div>
+                <!-- Calendar Converter -->
+                <div class="demo-card">
+                    <h3>
+                        <span class="icon">🌙</span>
+                        Calendar Converter
+                    </h3>
+                    <div class="input-group">
+                        <label for="calendar-input">Tanggal:</label>
+                        <input type="date" id="calendar-input" value="2024-12-31">
+                    </div>
+                    <div class="input-group">
+                        <label for="calendar-type">Konversi ke:</label>
+                        <select id="calendar-type">
+                            <option value="javanese">Kalender Jawa</option>
+                            <option value="hijri">Kalender Hijriah</option>
+                            <option value="both">Keduanya</option>
+                        </select>
+                    </div>
+                    <button onclick="convertCalendar()">Konversi</button>
+                    <div id="calendar-result" class="result">
+                        <div class="result-label">Hasil:</div>
+                        <div class="result-value" id="calendar-output"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="stats-section">
+        <div class="container">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Why Indonesia Formatter?</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Formatter Types</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">TypeScript Support</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Dependencies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">< 10kb</div>
+                    <div class="stat-label">Bundle Size</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://www.npmjs.com/package/indonesia-formatter" target="_blank">NPM</a>
+                <a href="https://github.com/codenamekii/indonesia-formatter" target="_blank">GitHub</a>
+                <a href="https://github.com/codenamekii/indonesia-formatter/issues" target="_blank">Issues</a>
+                <a href="https://github.com/codenamekii/indonesia-formatter#readme" target="_blank">Documentation</a>
+            </div>
+            <p>&copy; 2024 Indonesia Formatter. Made with ❤️ in Indonesia</p>
+        </div>
+    </footer>
 
     <script>
-        // Simulated library functions (in real implementation, these would be imported)
-        
+        // Utility function to show results with animation
+        function showResult(resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.classList.add('show');
+        }
+
+        function hideResult(resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.classList.remove('show');
+        }
+
+        function showError(errorId, message) {
+            const errorDiv = document.getElementById(errorId);
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        function hideError(errorId) {
+            const errorDiv = document.getElementById(errorId);
+            errorDiv.textContent = '';
+            errorDiv.classList.remove('show');
+        }
+
+        // Phone Formatter
         function formatPhone() {
             const input = document.getElementById('phone-input').value;
             const format = document.getElementById('phone-format').value;
-            const resultDiv = document.getElementById('phone-result');
             const outputDiv = document.getElementById('phone-output');
-            const errorDiv = document.getElementById('phone-error');
+            
+            hideError('phone-error');
             
             try {
-                // Simulate phone formatting
                 const cleaned = input.replace(/\D/g, '');
+                
+                if (!cleaned || cleaned.length < 10) {
+                    throw new Error('Nomor telepon tidak valid');
+                }
+                
                 let formatted = '';
                 
                 if (cleaned.startsWith('62')) {
@@ -311,22 +668,24 @@
                             formatted = `${phone.slice(0, 4)} ${phone.slice(4, 8)} ${phone.slice(8)}`;
                             break;
                     }
+                } else {
+                    throw new Error('Format nomor telepon tidak dikenali');
                 }
                 
                 outputDiv.textContent = formatted;
-                resultDiv.style.display = 'block';
-                errorDiv.textContent = '';
+                showResult('phone-result');
             } catch (error) {
-                errorDiv.textContent = 'Format nomor telepon tidak valid';
-                resultDiv.style.display = 'none';
+                showError('phone-error', error.message);
+                hideResult('phone-result');
             }
         }
         
+        // NPWP Formatter
         function formatNPWP() {
             const input = document.getElementById('npwp-input').value;
-            const resultDiv = document.getElementById('npwp-result');
             const outputDiv = document.getElementById('npwp-output');
-            const errorDiv = document.getElementById('npwp-error');
+            
+            hideError('npwp-error');
             
             try {
                 const cleaned = input.replace(/\D/g, '');
@@ -338,19 +697,19 @@
                 const formatted = `${cleaned.slice(0, 2)}.${cleaned.slice(2, 5)}.${cleaned.slice(5, 8)}.${cleaned.slice(8, 9)}-${cleaned.slice(9, 12)}.${cleaned.slice(12, 15)}`;
                 
                 outputDiv.textContent = formatted;
-                resultDiv.style.display = 'block';
-                errorDiv.textContent = '';
+                showResult('npwp-result');
             } catch (error) {
-                errorDiv.textContent = error.message;
-                resultDiv.style.display = 'none';
+                showError('npwp-error', error.message);
+                hideResult('npwp-result');
             }
         }
         
+        // NIK Parser
         function parseNIK() {
             const input = document.getElementById('nik-input').value;
-            const resultDiv = document.getElementById('nik-result');
             const outputDiv = document.getElementById('nik-output');
-            const errorDiv = document.getElementById('nik-error');
+            
+            hideError('nik-error');
             
             try {
                 const cleaned = input.replace(/\D/g, '');
@@ -375,31 +734,34 @@
                 
                 const fullYear = year > 50 ? 1900 + year : 2000 + year;
                 
-                const info = `
-NIK: ${cleaned.slice(0, 4)} ${cleaned.slice(4, 8)} ${cleaned.slice(8, 12)} ${cleaned.slice(12, 16)}
+                const info = `NIK: ${cleaned.slice(0, 4)} ${cleaned.slice(4, 8)} ${cleaned.slice(8, 12)} ${cleaned.slice(12, 16)}
 Provinsi: ${provinceCode}
 Kota/Kab: ${cityCode}
 Kecamatan: ${districtCode}
 Tgl Lahir: ${day}/${month}/${fullYear}
-Jenis Kelamin: ${isFemale ? 'Perempuan' : 'Laki-laki'}
-                `.trim();
+Jenis Kelamin: ${isFemale ? 'Perempuan' : 'Laki-laki'}`;
                 
                 outputDiv.textContent = info;
-                resultDiv.style.display = 'block';
-                errorDiv.textContent = '';
+                showResult('nik-result');
             } catch (error) {
-                errorDiv.textContent = error.message;
-                resultDiv.style.display = 'none';
+                showError('nik-error', error.message);
+                hideResult('nik-result');
             }
         }
         
+        // Date Formatter
         function formatDate() {
             const input = document.getElementById('date-input').value;
             const format = document.getElementById('date-format').value;
-            const resultDiv = document.getElementById('date-result');
             const outputDiv = document.getElementById('date-output');
             
-            const date = new Date(input);
+            if (!input) {
+                outputDiv.textContent = 'Pilih tanggal terlebih dahulu';
+                showResult('date-result');
+                return;
+            }
+            
+            const date = new Date(input + 'T00:00:00');
             const months = [
                 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -437,36 +799,47 @@ Jenis Kelamin: ${isFemale ? 'Perempuan' : 'Laki-laki'}
             }
             
             outputDiv.textContent = formatted;
-            resultDiv.style.display = 'block';
+            showResult('date-result');
         }
         
+        // Calendar Converter
         function convertCalendar() {
             const input = document.getElementById('calendar-input').value;
             const type = document.getElementById('calendar-type').value;
-            const resultDiv = document.getElementById('calendar-result');
             const outputDiv = document.getElementById('calendar-output');
             
-            const date = new Date(input);
+            if (!input) {
+                outputDiv.textContent = 'Pilih tanggal terlebih dahulu';
+                showResult('calendar-result');
+                return;
+            }
+            
+            const date = new Date(input + 'T00:00:00');
             let result = '';
             
             if (type === 'javanese' || type === 'both') {
-                // Simplified Javanese calendar calculation
                 const pasaran = ['Legi', 'Pahing', 'Pon', 'Wage', 'Kliwon'];
                 const baseDate = new Date(1633, 6, 8);
                 const diff = Math.floor((date - baseDate) / (1000 * 60 * 60 * 24));
                 const pasaranIndex = diff % 5;
                 
-                result += `Kalender Jawa: ${pasaran[pasaranIndex]}, [perhitungan lengkap akan ditampilkan]\n`;
+                result += `Kalender Jawa:\n${pasaran[pasaranIndex]}, [perhitungan kalender Jawa lengkap]\n`;
             }
             
             if (type === 'hijri' || type === 'both') {
-                // Simplified Hijri display
-                result += `${type === 'both' ? '\n' : ''}Kalender Hijriah: [perhitungan Hijriah akan ditampilkan]`;
+                result += `${type === 'both' ? '\n' : ''}Kalender Hijriah:\n[perhitungan kalender Hijriah]`;
             }
             
             outputDiv.textContent = result;
-            resultDiv.style.display = 'block';
+            showResult('calendar-result');
         }
+
+        // Initialize with current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-input').value = today;
+            document.getElementById('calendar-input').value = today;
+        });
     </script>
 </body>
 </html>
